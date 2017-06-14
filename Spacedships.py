@@ -7,8 +7,6 @@ from pygame.locals import *
 pygame.init()
 width, height = 640, 480
 screen = pygame.display.set_mode((width, height))
-shippos = [320,400]
-badshippos = [320,-10]
 keys = [False, False, False, False]
 health = 20
 
@@ -22,9 +20,12 @@ goodship = pygame.transform.scale(goodshippic,(64,64))
 
 #the great loop
 while True:
+    badrect = pygame.Rect(badship.get_rect())
+    goodrect = pygame.Rect(goodship.get_rect())
+    
     screen.fill(0)
-    screen.blit(badship, badshippos)
-    screen.blit(goodship, shippos)
+    screen.blit(badship, (badrect.x, badrect.y))
+    screen.blit(goodship, (goodrect.x,goodrect.y))
     pygame.display.flip()
 
 #key events
@@ -47,30 +48,23 @@ while True:
                 keys[2]=False
             elif event.key==pygame.K_d:
                 keys[3]=False
-
 #moving
     if keys[0]:
-        shippos[1]-=1.5
+        goodrect.y += 1.5
     elif keys[2]:
-        shippos[1]+=1.5
+        goodrect.y -= 1.5
     if keys[1]:
-        shippos[0]-=1.5
+        goodrect[0]-=1.5
     elif keys[3]:
-        shippos[0]+=1.5
+        goodrect[0]+=1.5
 
-    badshippos[1] +=0.5
+    badrect[1] +=0.5
 
 #colliding party
-    badrect = pygame.Rect(badship.get_rect())
-    badrect.top = badship[1]
-    badrect.left = badship[0]
     
-    goodrect = pygame.Rect(goodship.get_rect())
-    goodrect.top = goodship[1]
-    goodrect.left = goodship[0]
     
     if badrect.colliderect(goodrect):
         health -= 5
-        print("yeas")
+        print(goodrect)
 
     
