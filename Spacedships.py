@@ -12,8 +12,7 @@ health = 3
 shooting = 0
 badtimer = 100
 badtimer1 = 0
-badguys = [[640, 100]]
-badrects = [[]]
+badguys = []
 clock = pygame.time.Clock()
 
 #importing pictures
@@ -27,12 +26,18 @@ goodship = pygame.transform.scale(goodshippic,(64,64))
 bomb = pygame.transform.scale(bombpic,(64,64))
 
 #get rekt m8
-for badguy in badguys:
-    badrect = pygame.Rect(badship.get_rect())
 goodrect = pygame.Rect(goodship.get_rect())
 bombrect = pygame.Rect(bomb.get_rect())
 goodrect.x, goodrect.y = [425,650]
 bombrect.x, goodrect.y = [goodrect.x,goodrect.y]
+
+class badguy():
+    def __init__(self, x, y, image):
+        self.image = image
+        self.rect = pygame.Rect(self.image.get_rect())
+        self.rect.x = x
+        self.rect.y = y
+        badguys.append(self)
 
 #the great loop
 while True:
@@ -74,34 +79,21 @@ while True:
     #badguyrect.y += 1
     bombrect.y -= 2
 
-#badboys, badboys, what you gonna do?    
-    index = 0
-    badtimer -= 1
-    if badtimer == 0:
-        badguys.append([random.randint(64, 786), random.randint(-128,-64)])
-        badrect = pygame.Rect(badguys.get_rect())
-        badrects.append([badrect.x,badrect.y])
-        badtimer = 500-(badtimer1*2)
-        if badtimer1 >= 5:
-            badtimer1 = 5
-        else:
-            badtimer1 += 1
-
-    for badguy in badguys:
-        if badguy[0] < -64:
-            badguys.pop(index)
-        for rects in badrects:
-            badrect.y += 1
-        index += 1
-    for badguy in badguys:
-        screen.blit(badship, (badrect.x, badrect.y))
+#badboys, badboys, what you gonna do?
+    x = 0 #random.randrange(0,786)
+    y = 0 #random.randrange(50,60)
+    for i in range(0,10):
+        i = badguy(x, y, badship)
+        x += 50
+        y += 50
 
     #colliding party
     for badguy in badguys:
-        if badrects.rect.colliderect(goodrect):
+        #badguy.y += 1
+        if badguy.rect.colliderect(goodrect):
             health -= 1
-            print("fck")
+            print("fuck")
+    
     screen.blit(goodship, (goodrect.x,goodrect.y))
     pygame.display.flip()
     screen.fill(0)
-    #print(pygame.mouse.get_pos())
